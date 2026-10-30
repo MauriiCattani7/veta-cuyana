@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Veta Cuyana | Portal de vacantes mineras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<!-- sin sesión, esta página manda al login; las empresas van a su panel -->
+<script src="js/db.js"></script>
+<script>DB.guard("persona")</script>
+
+<!-- ESTILOS DEL VIDEO DE FONDO DEL HERO (van después de styles.css para que tengan prioridad) -->
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;      /* mantiene el video detrás del texto dentro del hero */
+    overflow: hidden;
+    min-height: 70vh;        /* alto del hero: probá entre 60vh y 100vh */
+  }
+  .hero .video-hero {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+  }
+  .hero::after {             /* capa oscura para que el texto se lea bien */
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.65));
+    z-index: -1;
+    pointer-events: none;
+  }
+  .hero #slides,
+  .hero .arrow { display: none; }   /* se oculta el carrusel: ahora manda el video */
+  .hero .hcopy { z-index: 2; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#">
+      <i><svg viewBox="0 0 24 24"><path d="M3 17h18M5 17a7 7 0 0 1 14 0M12 6v4M8 8l1.5 2.5M16 8l-1.5 2.5"/></svg></i>
+      <div><b>Veta<span>Cuyana</span></b><small>Portal de vacantes mineras</small></div>
+    </a>
+    <div class="acts">
+      <div class="curve">
+        <button class="btn" onclick="openCV()" title="Cargar CV"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg><span>Cargar CV</span></button>
+        <a class="btn pri" href="persona.html" title="Mis postulaciones" style="text-decoration:none"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V4h6v3M9 14l2 2 4-4"/></svg><span>Mis postulaciones</span></a>
+      </div>
+      <button class="round" id="theme" aria-label="Cambiar tema claro u oscuro"></button>
+      <button class="round" id="acc" aria-label="Mi cuenta"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO: video de fondo -->
+<section class="hero" id="hero">
+
+  <!-- VIDEO DE FONDO: cambiá el nombre del archivo en src si el tuyo se llama distinto -->
+  <video class="video-hero" autoplay muted loop playsinline>
+    <source src="media/mineria.mp4" type="video/mp4">
+  </video>
+
+  <!-- El carrusel original se conserva (oculto) para que app.js siga funcionando sin errores -->
+  <div id="slides"></div>
+  <button class="arrow l" onclick="go(-1)" aria-label="Anterior"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button class="arrow r" onclick="go(1)" aria-label="Siguiente"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  <div class="hcopy"><div class="wrap">
+    <h1 id="ht"></h1><p id="hp"></p>
+  </div></div>
+</section>
+
+<!-- FILTRO sobre el carrusel -->
+<div class="wrap fwrap">
+  <form class="filter" id="sf">
+    <label class="field"><svg viewBox="0 0 24 24"><path d="M4 16a8 8 0 0 1 16 0M2 16h20M12 4v4"/></svg><input id="kw" placeholder="Puesto o especialidad. Ej: operador CAEX"></label>
+    <label class="field"><svg viewBox="0 0 24 24"><path d="M3 20l6-10 4 6 3-4 5 8z"/></svg>
+      <select id="cat"><option value="todos">Categoría</option><option value="operacion">Operación mina</option><option value="mantenimiento">Mantenimiento</option><option value="geologia">Geología y sondaje</option><option value="seguridad">Seguridad HSEC</option></select></label>
+    <label class="field"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      <select id="ros"><option value="">Régimen</option><option>14x14</option><option>7x7</option><option>8x6</option><option>4x3</option></select></label>
+    <button class="btn pri go" type="submit"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Buscar</button>
+  </form>
+  <div class="chips">Mineral:
+    <button class="chip on" data-m="">Todos</button>
+    <button class="chip" data-m="Cobre"><i style="background:#e07a3f"></i>Cobre</button>
+    <button class="chip" data-m="Litio"><i style="background:#4cc9e0"></i>Litio</button>
+    <button class="chip" data-m="Oro"><i style="background:#f2b134"></i>Oro y plata</button>
+  </div>
+</div>
+
+<!-- EMPRESAS -->
+<section class="emp">
+  <div class="wrap">
+    <h2>Estas empresas necesitan tu talento</h2>
+    <div class="rail">
+      <button class="nbtn" onclick="document.getElementById('tr').scrollBy({left:-340,behavior:'smooth'})" aria-label="Anterior"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="track" id="tr"></div>
+      <button class="nbtn" onclick="document.getElementById('tr').scrollBy({left:340,behavior:'smooth'})" aria-label="Siguiente"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="grid-co" id="gc"></div>
+    <button class="outl" id="allco"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 8h2M13 8h2M9 12h2M13 12h2M10 21v-4h4v4"/></svg><span>Ver todas las empresas</span></button>
+  </div>
+</section>
+
+<!-- VACANTES -->
+<section class="vac" id="vacantes">
+  <div class="wrap">
+    <div class="vh">
+      <div><h2>Vacantes abiertas en faena <small id="cnt" style="font:600 18px Barlow;color:var(--acct)"></small></h2>
+      <p>Alimentación, traslado y campamento según cada oferta.</p></div>
+      <div class="tabs" id="tabs"></div>
+    </div>
+    <div class="jobs" id="jobs"></div>
+    <div class="empty" id="empty"><h3>No hay vacantes con esos filtros</h3><p style="margin:8px 0 16px">Prueba con otro régimen o quita la categoría.</p><button class="outl" onclick="reset()">Limpiar filtros</button></div>
+    <div class="more"><button class="outl" id="more">Ver todas las vacantes</button></div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cta">
+  <div class="wrap">
+    <div><h2>Tu próximo turno empieza con un CV cargado</h2>
+    <p>Las mineras y contratistas revisan esta base cuando necesitan gente para paradas de planta y campañas de sondaje.</p></div>
+    <button class="btn" onclick="openCV()"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>Cargar mi CV</button>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fg">
+      <div class="brand"><b>Veta Cuyana</b><p>Conectamos operadores, técnicos e ingenieros con las faenas que los necesitan.</p>
+        <a href="mailto:soporte@minastalent.com" style="color:var(--acc)">soporte@vetacuyana.com</a></div>
+      <div><div class="fh">Por mineral</div><a href="#vacantes">Cobre y molibdeno</a><a href="#vacantes">Litio y salmueras</a><a href="#vacantes">Oro y plata</a><a href="#vacantes">Hierro</a></div>
+      <div><div class="fh">Por especialidad</div><a href="#vacantes">Operadores CAEX y palas</a><a href="#vacantes">Mantenimiento mecánico</a><a href="#vacantes">Geología y sondaje</a><a href="#vacantes">Planificación mina</a></div>
+      <div><div class="fh">Antes de postular</div><a href="#">Examen de gran altura</a><a href="#">Certificaciones Sernageomin y OSHA</a><a href="#">Cómo funcionan los turnos</a><a href="#">Ayuda</a></div>
+    </div>
+    <div class="fb"><p>© 2026 Vetacuyana. Todos los derechos reservados.</p><span><a href="#">Términos</a><a href="#">Privacidad</a><a href="#">Seguridad HSEC</a></span></div>
+    <div class="big" aria-hidden="true">Vetacuyana</div>
+  </div>
+</footer>
+
+<dialog id="cv">
+  <form id="cvf">
+    <h3 id="cvt">Cargar CV</h3>
+    <label>Nombre completo<input id="cn" required placeholder="Mario Gómez"></label>
+    <div class="two"><label>Correo<input id="ce" type="email" readonly></label><label>WhatsApp<input id="cw" type="tel" required placeholder="+54 9 261 000 0000"></label></div>
+    <div class="two"><label>Experiencia en faena<select id="cx"><option>Menos de 2 años</option><option>2 a 5 años</option><option>5 a 10 años</option><option>Más de 10 años</option></select></label>
+    <label>Examen de altura<select id="ca"><option>Vigente</option><option>Por renovar</option><option>Sin realizar</option></select></label></div>
+    <label>Currículum (PDF o DOCX, hasta 600 KB)<input id="cf" type="file" accept=".pdf,.doc,.docx"></label>
+    <p class="hint" id="cvs"></p>
+    <p class="err" id="cerr" role="alert" hidden></p>
+    <div class="row"><button type="button" class="btn" onclick="cv.close()">Cancelar</button><button class="btn pri" type="submit" id="cbtn">Enviar postulación</button></div>
+  </form>
+</dialog>
+<div id="toast" role="status"></div>
+
+<script src="js/ui.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

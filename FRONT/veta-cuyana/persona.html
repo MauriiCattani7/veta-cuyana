@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mis postulaciones | Veta Cuyana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/db.js"></script>
+<script>DB.guard("persona")</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="index.html">
+      <i><svg viewBox="0 0 24 24"><path d="M3 17h18M5 17a7 7 0 0 1 14 0M12 6v4M8 8l1.5 2.5M16 8l-1.5 2.5"/></svg></i>
+      <div><b>Veta<span>Cuyana</span></b><small>Portal de vacantes mineras</small></div>
+    </a>
+    <div class="acts">
+      <div class="curve">
+        <a class="btn pri" href="index.html" title="Buscar vacantes" style="text-decoration:none"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span>Buscar vacantes</span></a>
+      </div>
+      <button class="round" id="theme" aria-label="Cambiar tema claro u oscuro"></button>
+      <button class="round" id="acc" aria-label="Mi cuenta"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap dash">
+  <div class="dh">
+    <div><h1>Mis postulaciones</h1><p id="ds"></p></div>
+    <div class="tabs" id="tabs"></div>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div class="cands" id="pl"></div>
+</main>
+
+<div id="toast" role="status"></div>
+
+<script src="js/ui.js"></script>
+<script src="js/persona.js"></script>
+</body>
+</html>

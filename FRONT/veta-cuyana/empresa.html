@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panel de empresa | Veta Cuyana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/db.js"></script>
+<script>DB.guard("empresa")</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="empresa.html">
+      <i><svg viewBox="0 0 24 24"><path d="M3 17h18M5 17a7 7 0 0 1 14 0M12 6v4M8 8l1.5 2.5M16 8l-1.5 2.5"/></svg></i>
+      <div><b>Veta<span>Cuyana</span></b><small>Panel de empresa</small></div>
+    </a>
+    <div class="acts">
+      <div class="curve">
+        <button class="btn pri" id="newo" title="Nueva oferta"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Nueva oferta</span></button>
+      </div>
+      <button class="round" id="theme" aria-label="Cambiar tema claro u oscuro"></button>
+      <button class="round" id="acc" aria-label="Mi cuenta"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 8h2M13 8h2M9 12h2M13 12h2M10 21v-4h4v4"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap dash">
+  <div class="dh">
+    <div><h1>Panel de empresa</h1><p id="ds"></p></div>
+    <div class="tabs" id="tabs">
+      <button class="chip on" data-t="o">Mis ofertas</button>
+      <button class="chip" data-t="p">Postulantes</button>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <section id="pO">
+    <div class="jobs" id="ol"></div>
+  </section>
+
+  <section id="pP" hidden>
+    <div class="dbar">
+      <label class="hint" for="pf">Mostrar postulantes de:</label>
+      <select class="inp" id="pf"></select>
+    </div>
+    <div class="cands" id="pl"></div>
+  </section>
+</main>
+
+<!-- NUEVA OFERTA -->
+<dialog id="of">
+  <form id="off">
+    <h3>Nueva oferta</h3>
+    <label>Puesto<input id="op" required maxlength="80" placeholder="Operador de camión CAEX 797F"></label>
+    <div class="two">
+      <label>Categoría<select id="oc" required><option value="operacion">Operación mina</option><option value="mantenimiento">Mantenimiento</option><option value="geologia">Geología y sondaje</option><option value="seguridad">Seguridad HSEC</option></select></label>
+      <label>Mineral<select id="om" required><option>Cobre</option><option>Litio</option><option>Oro</option></select></label>
+    </div>
+    <div class="two">
+      <label>Ubicación<input id="ou" required maxlength="80" placeholder="Iglesia, San Juan"></label>
+      <label>Régimen<select id="or" required><option>14x14</option><option>7x7</option><option>8x6</option><option>4x3</option></select></label>
+    </div>
+    <div class="two">
+      <label>Renta mínima (USD/mes)<input id="on1" type="number" min="0" step="50" required placeholder="2800"></label>
+      <label>Renta máxima (USD/mes)<input id="on2" type="number" min="0" step="50" required placeholder="3500"></label>
+    </div>
+    <div class="two">
+      <label>Altura (msnm)<input id="oa" type="number" min="0" max="6000" placeholder="3800"></label>
+      <label>Alojamiento<input id="ol2" maxlength="60" placeholder="Campamento y vuelo"></label>
+    </div>
+    <label class="chk"><input id="ox" type="checkbox"><span>Marcar como urgente</span></label>
+    <p class="err" id="oerr" role="alert" hidden></p>
+    <div class="row"><button type="button" class="btn" onclick="of.close()">Cancelar</button><button class="btn pri" type="submit">Publicar oferta</button></div>
+  </form>
+</dialog>
+<div id="toast" role="status"></div>
+
+<script src="js/ui.js"></script>
+<script src="js/data.js"></script>
+<script src="js/empresa.js"></script>
+</body>
+</html>

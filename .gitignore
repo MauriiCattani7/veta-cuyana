@@ -1,0 +1,17 @@
+# Compilación y binarios Maven (Java / Spring Boot)
+**/target/
+*.class
+*.jar
+*.war
+
+# Configuraciones de editores y herramientas
+.vscode/
+.idea/
+*.iml
+.settings/
+.classpath
+.project
+
+# Archivos temporales de sistema operativo
+Thumbs.db
+.DS_Store
