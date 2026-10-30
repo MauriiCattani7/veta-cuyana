@@ -176,26 +176,42 @@ const DB=(()=>{
     }
   }
 
-  const ofertasDe = empresaId => ofertas().filter(o => o.empresaId == empresaId).sort((a, b) => b.creada - a.creada);
+  /* Obtener las ofertas de una empresa puntual desde MySQL */
+  async function ofertasDe(empresaId) {
+    const todas = await ofertasAbiertas();
+    return todas.filter(o => !empresaId || o.empresaId == empresaId);
+  }
 
-  async function publish(empresa, d) {
+ /* Publicar una nueva oferta y persistirla en MySQL mediante Spring Boot */
+  async function publish(empresa, of) {
     try {
+      // Extrae el primer número de la renta (ej: de "USD 2.800–3.500" extrae 2800)
+      const numMatch = String(of.renta).replace(/\./g, "").match(/\d+/);
+      const sueldoLimpio = numMatch ? parseFloat(numMatch[0]) : 2500.0;
+
+      const payload = {
+        empresaId: Number(empresa.id || 1),
+        titulo: of.puesto,
+        descripcion: `Mineral: ${of.mineral} | Régimen: ${of.regimen} | Altura: ${of.altura} | Alojamiento: ${of.alojamiento}`,
+        modalidad: of.cat || "Operaciones",
+        salario: sueldoLimpio
+      };
+
       const res = await fetch(API_OFERTAS_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          empresaId: empresa.id,
-          titulo: d.puesto || d.titulo,
-          descripcion: d.descripcion || "Sin descripción",
-          modalidad: d.cat || d.modalidad || "Presencial",
-          salario: d.renta ? parseFloat(String(d.renta).replace(/[^0-9.]/g, '')) || null : null
-        })
+        body: JSON.stringify(payload)
       });
-      if (!res.ok) return { error: "No se pudo guardar la oferta en el servidor." };
-      const ofertaCreada = await res.json();
-      return { oferta: ofertaCreada };
+
+      if (!res.ok) {
+        return { error: "No se pudo guardar la vacante en el servidor." };
+      }
+
+      const guardada = await res.json();
+      return { oferta: guardada };
     } catch (err) {
-      return { error: "Error al conectar con el servidor." };
+      console.error("Error al publicar oferta en backend:", err);
+      return { error: "Error de conexión con el backend." };
     }
   }
 
